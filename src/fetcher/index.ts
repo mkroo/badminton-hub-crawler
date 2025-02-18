@@ -1,0 +1,1 @@
+export { StaticHtmlFetcher } from './StaticHtmlFetcher'
