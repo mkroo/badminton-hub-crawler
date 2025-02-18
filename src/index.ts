@@ -1,5 +1,6 @@
 import { UrlFrontier } from "./component";
 import { fetcherContainer, parserContainer } from "./provider";
+import { writeFile } from 'fs'
 
 class TempUrlFrontier implements UrlFrontier {
   private fixtedUrls: URL[]
@@ -24,9 +25,19 @@ class TempUrlFrontier implements UrlFrontier {
   }
 }
 
-for (const url of new TempUrlFrontier()) {
-  const fetcher = fetcherContainer.get(url)
-  const parser = parserContainer.get(url)
-
-  fetcher.fetch(url).then((html) => parser.parse(html)).then(console.log)
-}
+Promise.all(
+  Array.from(new TempUrlFrontier()).map(async (url) => {
+    const fetcher = fetcherContainer.get(url)
+    const parser = parserContainer.get(url)
+  
+    return fetcher.fetch(url).then((html) => parser.parse(html))
+  })
+)
+.then((results) => results.flat())
+.then((shops) => {
+  writeFile('.out/shops.json', JSON.stringify(shops, null, 2), (err) => {
+    if (err) {
+      console.error(err)
+    }
+  })
+})
