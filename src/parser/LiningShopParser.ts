@@ -1,10 +1,10 @@
 import { JSDOM } from "jsdom"
 import { Parser } from "../component";
-import { LiningShop } from "../dto";
+import { Store } from "../dto/store";
 
-class LiningShopParser implements Parser<LiningShop> {
-  parse(html: string): LiningShop[] {
-    const shops: LiningShop[] = []
+class LiningShopParser implements Parser<Store> {
+  parse(html: string): Store[] {
+    const shops: Store[] = []
 
     new JSDOM(html).window.document.querySelectorAll('div.jtbl_wrap > table > tbody > tr').forEach((storeInfoElement) => {
       const shop = this.parseShop(storeInfoElement)
@@ -14,7 +14,7 @@ class LiningShopParser implements Parser<LiningShop> {
     return shops
   }
 
-  private parseShop(element: Element): LiningShop {
+  private parseShop(element: Element): Store {
     const name = element.querySelector('td:nth-child(2)')?.textContent || null
     const contact = element.querySelector('td:nth-child(3)')?.textContent || null
     const address = element.querySelector('td:nth-child(4) > a')?.textContent || null
@@ -23,7 +23,7 @@ class LiningShopParser implements Parser<LiningShop> {
       throw new Error('Lining: Shop data not found')
     }
 
-    return new LiningShop(name, address, contact)
+    return Store.lining(name, address, contact)
   }
 }
 

@@ -1,10 +1,10 @@
 import { JSDOM } from "jsdom"
 import { Parser } from "../component"
-import { YonexShop } from "../dto"
+import { Store } from "../dto/store"
 
-class YonexShopParser implements Parser<YonexShop> {
-  parse(html: string): YonexShop[] {
-    const shops: YonexShop[] = []
+class YonexShopParser implements Parser<Store> {
+  parse(html: string): Store[] {
+    const shops: Store[] = []
 
     new JSDOM(html).window.document.querySelectorAll('dl.storeInfo').forEach((storeInfoElement) => {
       const shop = this.parseShop(storeInfoElement)
@@ -14,7 +14,7 @@ class YonexShopParser implements Parser<YonexShop> {
     return shops
   }
 
-  private parseShop(element: Element): YonexShop {
+  private parseShop(element: Element): Store {
     const name = element.querySelector('dt')?.textContent || null
     const address = element.querySelector('dd > p:nth-child(2)')?.textContent || null
     const contact = element.querySelector('dd > p:nth-child(3)')?.textContent || null
@@ -23,7 +23,7 @@ class YonexShopParser implements Parser<YonexShop> {
       throw new Error('Yonex: Shop data not found')
     }
 
-    return new YonexShop(name, address, contact)
+    return Store.yonex(name, address, contact)
   }
 }
 

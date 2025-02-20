@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from "fs/promises";
 import { UrlFrontier } from "./component";
 import { fetcherContainer, parserContainer } from "./provider";
+import { databaseClient } from "./database";
 
 class TempUrlFrontier implements UrlFrontier {
   private fixtedUrls: URL[]
@@ -34,9 +34,4 @@ Promise.all(
   })
 )
 .then((results) => results.flat())
-.then((shops) => {
-  mkdir('.out', { recursive: true })
-  .then(() => {
-    writeFile('.out/shops.json', JSON.stringify(shops, null, 2))
-  })
-})
+.then((stores) => databaseClient.syncStores(stores))
