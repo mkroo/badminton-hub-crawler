@@ -29,11 +29,5 @@ jobs:
       - name: Transpile TypeScript
         run: npm run build
 
-      - name: Generate JSON file
+      - name: Sync data source
         run: npm run start
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: data-artifact
-          path: .out/shops.json
