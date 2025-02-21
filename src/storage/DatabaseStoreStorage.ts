@@ -3,15 +3,15 @@ import { Store } from "../dto/store"
 import { LocationService } from "../application/LocationService"
 import { inject, injectable } from "inversify"
 import { NaverLocationService } from "../application/NaverLocationService"
+import { Storage } from "../component"
 
 @injectable()
-class StoreSyncService {
+class DatabaseStoreStorage implements Storage<Store> {
   constructor(
     @inject(PrismaClient) private prisma: PrismaClient, 
     @inject(NaverLocationService) private locationService: LocationService
   ) {}
-
-  async syncStores(storeOrUnknownList: unknown[]) {
+  async save(storeOrUnknownList: Store[]) {
     const stores = storeOrUnknownList.filter((store) => store instanceof Store)
 
     const { newStores, existingStores } = await this.filterExistingStores(stores)
@@ -63,4 +63,4 @@ class StoreSyncService {
   }
 }
 
-export { StoreSyncService }
+export { DatabaseStoreStorage }

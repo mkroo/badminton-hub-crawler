@@ -1,7 +1,9 @@
 import { JSDOM } from "jsdom"
 import { Parser } from "../component"
 import { Store } from "../dto/store"
+import { injectable } from "inversify"
 
+@injectable()
 class YonexShopParser implements Parser<Store> {
   parse(html: string): Store[] {
     const shops: Store[] = []

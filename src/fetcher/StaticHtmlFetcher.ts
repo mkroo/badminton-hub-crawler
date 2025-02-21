@@ -1,7 +1,9 @@
 import { JSDOM } from "jsdom"
 import iconv from 'iconv-lite'
 import { Fetcher } from "../component"
+import { injectable } from "inversify"
 
+@injectable()
 class StaticHtmlFetcher implements Fetcher {
   async fetch(url: URL): Promise<string> {
     const response = await fetch(url.toString())

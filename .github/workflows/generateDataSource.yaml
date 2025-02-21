@@ -22,6 +22,8 @@ jobs:
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "DIRECT_URL=${{ secrets.DIRECT_URL }}" >> .env
+          echo "NAVER_CLOUD_PLATFORM_CLIENT_ID=${{ secrets.NAVER_CLOUD_PLATFORM_CLIENT_ID }}" >> .env
+          echo "NAVER_CLOUD_PLATFORM_CLIENT_SECRET=${{ secrets.NAVER_CLOUD_PLATFORM_CLIENT_SECRET }}" >> .env
 
       - name: Install dependencies
         run: npm install

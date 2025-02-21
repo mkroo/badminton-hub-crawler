@@ -10,4 +10,8 @@ interface Parser<T> {
   parse(html: string): T[]
 }
 
-export { UrlFrontier, Fetcher, Parser }
+interface Storage<T> {
+  save(data: T[]): Promise<void>
+}
+
+export { UrlFrontier, Fetcher, Parser, Storage }
