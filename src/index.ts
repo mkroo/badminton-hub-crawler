@@ -1,6 +1,7 @@
 import { UrlFrontier } from "./component";
+import { container } from "./config/inversify";
+import { StoreSyncService } from "./database/store";
 import { fetcherContainer, parserContainer } from "./provider";
-import { databaseClient } from "./database";
 
 class TempUrlFrontier implements UrlFrontier {
   private fixtedUrls: URL[]
@@ -34,4 +35,4 @@ Promise.all(
   })
 )
 .then((results) => results.flat())
-.then((stores) => databaseClient.syncStores(stores))
+.then((stores) => container.resolve(StoreSyncService).syncStores(stores))

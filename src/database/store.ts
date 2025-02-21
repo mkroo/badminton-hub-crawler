@@ -1,10 +1,17 @@
 import { PrismaClient } from "@prisma/client"
 import { Store } from "../dto/store"
+import { LocationService } from "../application/LocationService"
+import { inject, injectable } from "inversify"
+import { NaverLocationService } from "../application/NaverLocationService"
 
-class StoreSyncCommand {
-  constructor(private prisma: PrismaClient) {}
+@injectable()
+class StoreSyncService {
+  constructor(
+    @inject(PrismaClient) private prisma: PrismaClient, 
+    @inject(NaverLocationService) private locationService: LocationService
+  ) {}
 
-  async run(storeOrUnknownList: unknown[]) {
+  async syncStores(storeOrUnknownList: unknown[]) {
     const stores = storeOrUnknownList.filter((store) => store instanceof Store)
 
     const { newStores, existingStores } = await this.filterExistingStores(stores)
@@ -36,18 +43,24 @@ class StoreSyncCommand {
   }
 
   private async createNewStores(newStores: Store[]) {
-    await this.prisma.stores.createMany({ data: newStores.map(this.storeToRow) })
+    const rows = await Promise.all(newStores.map((store) => this.storeToRow(store)))
+
+    await this.prisma.stores.createMany({ data: rows })
   }
 
-  private storeToRow(store: Store) {
+  private async storeToRow(store: Store) {
+    const coordinate = await this.locationService.getCoordinate(store.address)
+
     return {
       brand: store.brand,
       name: store.name,
       address: store.address,
       contact: store.contact,
       equalityHash: store.equalityHash,
+      latitude: coordinate?.latitude,
+      longitude: coordinate?.longitude,
     }
   }
 }
 
-export { StoreSyncCommand }
+export { StoreSyncService }

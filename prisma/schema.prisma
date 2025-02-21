@@ -11,12 +11,15 @@ datasource db {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model stores {
-  id            BigInt    @id @default(autoincrement())
-  brand         String    @db.VarChar
-  name          String    @db.VarChar
-  address       String    @db.VarChar
-  contact       String    @db.VarChar
-  equalityHash  String    @db.VarChar @unique @map("equality_hash")
-  createdAt     DateTime  @default(now()) @db.Timestamptz(6) @map("created_at")
-  lastUpdatedAt DateTime  @default(now()) @db.Timestamptz(6) @map("last_updated_at")
+  id            BigInt                    @id @default(autoincrement())
+  name          String                    @db.VarChar
+  address       String                    @db.VarChar
+  contact       String                    @db.VarChar
+  equalityHash  String                    @unique @map("equality_hash") @db.VarChar
+  createdAt     DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  brand         String                    @db.VarChar
+  lastUpdatedAt DateTime                  @default(now()) @map("last_updated_at") @db.Timestamptz(6)
+  latitude      Float?
+  longitude     Float?
+  location      Unsupported("geography")?
 }
